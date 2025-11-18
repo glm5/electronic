@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "726891573583",
+    "project_id": "electronic-5e384",
+    "storage_bucket": "electronic-5e384.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:726891573583:android:2256dc5a107853bc46153a",
+        "android_client_info": {
+          "package_name": "com.example.electronic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAe58les1riR1lWaAaAYrOpzc9C-kKwzfE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
