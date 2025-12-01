@@ -4,6 +4,7 @@ import 'package:electronic/screen/login_screen.dart';
 import 'package:electronic/screen/signup_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:electronic/home/home1.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,13 +21,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
+      home: Home1(),
 
-      routes: {
-        '/': (context) => const Auth(),
-        'HomeScreen': (context) => const HomeScreen(),
-        'SignupScreen': (context) => const SignupScreen(),
-        'loginScreen': (context) => const LoginScreen(),
-      },
+      // routes: {
+      //   '/': (context) => const Auth(),
+      //   'HomeScreen': (context) => const HomeScreen(),
+      //   'SignupScreen': (context) => const SignupScreen(),
+      //   'loginScreen': (context) => const LoginScreen(),
+      // },
     );
   }
 }

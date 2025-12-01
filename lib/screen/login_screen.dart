@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+//import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }) {
     return Text(
       text,
-      style: GoogleFonts.robotoCondensed(
+      style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,

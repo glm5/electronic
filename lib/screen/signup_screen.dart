@@ -1,7 +1,7 @@
 // ignore_for_file: avoid_print
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+//import 'package:google_fonts/google_fonts.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -89,7 +89,7 @@ class _SignupScreenState extends State<SignupScreen> {
   }) {
     return Text(
       text,
-      style: GoogleFonts.robotoCondensed(
+      style: TextStyle(
         fontSize: fontSize,
         fontWeight: fontWeight,
         color: color,
