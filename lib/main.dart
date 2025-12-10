@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
 
-      home: const SignupScreen(),
+      home: const Auth(),
       routes: {
         // '/': (context) => const Auth(),
         'HomeScreen': (context) => const HomeScreen(),
