@@ -1,69 +1,119 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:google_fonts/google_fonts.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SigninScreen extends StatefulWidget {
+  const SigninScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SigninScreen> createState() => _SigninScreen();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SigninScreen extends State<SigninScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
-  // ثوابت للأنماط والألوان
-  //static const _whiteColor = Color.fromARGB(255, 255, 255, 255);
   static const _redColor = Color.fromARGB(255, 199, 29, 29);
   static const _blueColor = Color(0xff1976D2);
-  //static const _blackShadow = Colors.black;
 
-  // ظل مختصر ومشترك
   final _textShadow = [
     const Shadow(color: Colors.black, blurRadius: 0, offset: Offset(2, 2)),
   ];
 
+  // رسائل الخطأ لكل حقل
+  String? _emailError;
+  String? _passwordError;
+
   Future<void> _signIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    setState(() {
+      _emailError = null;
+      _passwordError = null;
+    });
+
+    bool hasError = false;
+
+    if (_emailController.text.trim().isEmpty) {
+      _emailError = "هذا الحقل مطلوب";
+      hasError = true;
+    }
+    if (_passwordController.text.trim().isEmpty) {
+      _passwordError = "هذا الحقل مطلوب";
+      hasError = true;
+    }
+
+    if (hasError) return;
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      if (!mounted) return;
+
+      // تسجيل الدخول ناجح، اذهب إلى الصفحة الرئيسية
+      Navigator.pushReplacementNamed(context, 'HomeScreen');
+    } on FirebaseAuthException catch (_) {
+      // إذا كان الإيميل أو الباسورد خطأ
+      setState(() {
+        _emailError = "الإيميل أو كلمة المرور غير صحيحة";
+        _passwordError = "الإيميل أو كلمة المرور غير صحيحة";
+      });
+    }
   }
 
   void _openSignupScreen() {
     Navigator.of(context).pushReplacementNamed('SignupScreen');
   }
 
-  // دالة مساعدة لإنشاء حقول الإدخال
   Widget _buildInputField(
     TextEditingController controller,
     String hint, {
     bool isPassword = false,
+    String? errorText,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 25),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: TextField(
-            controller: controller,
-            obscureText: isPassword,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: hint,
+      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: TextField(
+                controller: controller,
+                obscureText: isPassword,
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: hint,
+                ),
+              ),
             ),
           ),
-        ),
+          const SizedBox(height: 0),
+          if (errorText != null)
+            Text(
+              errorText,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(offset: Offset(-1, -1), color: Colors.black),
+                  Shadow(offset: Offset(1, -1), color: Colors.black),
+                  Shadow(offset: Offset(1, 1), color: Colors.black),
+                  Shadow(offset: Offset(-1, 1), color: Colors.black),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }
 
-  // دالة مساعدة لإنشاء النص
   Widget _buildText(
     String text, {
     double fontSize = 16,
@@ -92,7 +142,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // الخلفية
         Positioned.fill(
           child: Image.asset('images/SMA.png', fit: BoxFit.cover),
         ),
@@ -100,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
           bottom: 0,
           left: 0,
           right: 0,
-          height: MediaQuery.of(context).size.height * 0.3, // 30% من الشاشة
+          height: MediaQuery.of(context).size.height * 0.3,
           child: Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -115,7 +164,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-
         Scaffold(
           backgroundColor: Colors.transparent,
           body: SafeArea(
@@ -124,7 +172,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // الصورة
                     ClipRRect(
                       borderRadius: BorderRadius.circular(60),
                       child: Image.asset(
@@ -135,32 +182,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 40),
-
-                    // العنوان
                     _buildText(
-                      'SIGN IN',
+                      'WELCOME',
                       fontSize: 40,
                       fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 7),
-                    _buildText(
-                      'Welcome back! Nice to see you again',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 10),
+                    _buildText('Please sign in to continue', fontSize: 16),
+                    const SizedBox(height: 40),
+                    _buildInputField(
+                      _emailController,
+                      "Email",
+                      errorText: _emailError,
                     ),
-                    const SizedBox(height: 50),
-
-                    // حقول الإدخال
-                    _buildInputField(_emailController, "Email"),
                     const SizedBox(height: 20),
                     _buildInputField(
                       _passwordController,
                       "Password",
                       isPassword: true,
+                      errorText: _passwordError,
                     ),
                     const SizedBox(height: 15),
-
-                    // زر التسجيل
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25),
                       child: GestureDetector(
@@ -173,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                           child: Center(
                             child: _buildText(
-                              'sign in',
+                              'SIGN IN',
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -182,8 +224,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 20),
-
-                    // رابط التسجيل
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

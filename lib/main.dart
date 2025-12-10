@@ -1,10 +1,12 @@
 import 'package:electronic/auth.dart';
-import 'package:electronic/screen/home_screen.dart';
-import 'package:electronic/screen/login_screen.dart';
+import 'package:electronic/chat/chat1.dart';
+import 'package:electronic/home/home2.dart';
+import 'package:electronic/screen/signin_screen.dart';
 import 'package:electronic/screen/signup_screen.dart';
+import 'package:electronic/screen/userformscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:electronic/home/home1.dart';
+import 'package:electronic/home/homescreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,14 +23,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: Home1(),
 
-      // routes: {
-      //   '/': (context) => const Auth(),
-      //   'HomeScreen': (context) => const HomeScreen(),
-      //   'SignupScreen': (context) => const SignupScreen(),
-      //   'loginScreen': (context) => const LoginScreen(),
-      // },
+      home: const SignupScreen(),
+      routes: {
+        // '/': (context) => const Auth(),
+        'HomeScreen': (context) => const HomeScreen(),
+        'SignupScreen': (context) => const SignupScreen(),
+        'loginScreen': (context) => const SigninScreen(),
+      },
     );
   }
 }

@@ -1,31 +1,71 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-//import 'package:google_fonts/google_fonts.dart';
+import 'package:electronic/screen/signin_screen.dart'; // تأكد من المسار الصحيح
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class Home_Screen extends StatefulWidget {
+  const Home_Screen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<Home_Screen> createState() => _Home_ScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final user = FirebaseAuth.instance.currentUser!;
+class _Home_ScreenState extends State<Home_Screen> {
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseAuth.instance.authStateChanges().listen((User? currentUser) {
+      setState(() {
+        user = currentUser;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (user == null) {
+      // إعادة التوجيه إلى SignInScreen
+      Future.delayed(Duration.zero, () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => SigninScreen(),
+          ), // ✅ التصحيح هنا
+        );
+      });
+
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Hllow, You are Sign in', style: TextStyle(fontSize: 16)),
+            Text('مرحباً، أنت مسجل الدخول', style: TextStyle(fontSize: 16)),
+            SizedBox(height: 10),
+            Text(
+              'البريد الإلكتروني: ${user!.email}',
+              style: TextStyle(fontSize: 14),
+            ),
+            SizedBox(height: 20),
             MaterialButton(
-              onPressed: () {
-                FirebaseAuth.instance.signOut();
+              onPressed: () async {
+                try {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SigninScreen(),
+                    ), // ✅ هنا أيضاً
+                  );
+                } catch (e) {
+                  print('خطأ في تسجيل الخروج: $e');
+                }
               },
               color: Colors.amber[900],
-              child: Text('sign out'),
+              child: Text('تسجيل الخروج'),
             ),
           ],
         ),
